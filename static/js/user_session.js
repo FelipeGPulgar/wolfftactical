@@ -376,13 +376,19 @@
     observer.observe(document.body, { childList: true, subtree: true });
 
     // Inject Video on Homepage
-    function injectHomeVideo() {
-        // Only on homepage
-        if (window.location.pathname !== '/' && window.location.pathname !== '/index.html') return;
-
-        // PREVENT DUPLICATES: Remove if already exists (to be safe against re-renders)
+    function manageHomeVideo() {
+        // Check if we are on the homepage
+        const isHome = window.location.pathname === '/' || window.location.pathname === '/index.html';
         const existing = document.getElementById('home-intro-video');
-        if (existing) existing.remove();
+
+        // CRITICAL: If NOT on homepage, remove the video if it exists
+        if (!isHome) {
+            if (existing) existing.remove();
+            return;
+        }
+
+        // If on homepage and already exists, do nothing
+        if (existing) return;
 
         // 1. Try to append to <main> (Best for "between section and footer")
         const main = document.querySelector('main');
@@ -390,7 +396,10 @@
 
         const videoSection = document.createElement('div');
         videoSection.id = 'home-intro-video';
-        videoSection.className = 'w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mb-8'; // Added mb-8 for spacing
+        // Use transparent background and padding to separate from footer
+        videoSection.className = 'w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12';
+        videoSection.style.marginBottom = '50px'; // Explicit spacing
+
         videoSection.innerHTML = `
             <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-800 bg-gray-900">
                 <video 
@@ -416,15 +425,15 @@
         }
     }
 
-    // Run injection
+    // Run injection/cleanup
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', injectHomeVideo);
+        document.addEventListener('DOMContentLoaded', manageHomeVideo);
     } else {
-        injectHomeVideo();
+        manageHomeVideo();
     }
-    window.addEventListener('load', injectHomeVideo);
+    window.addEventListener('load', manageHomeVideo);
 
-    // Also try periodically for SPA changes
-    setInterval(injectHomeVideo, 1000);
+    // Also try periodically for SPA changes (React Router)
+    setInterval(manageHomeVideo, 500);
 
 })();
