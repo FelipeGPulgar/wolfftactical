@@ -99,13 +99,6 @@
     function fixRawHtml(node) {
         if (!node || node.nodeType !== Node.ELEMENT_NODE) return;
 
-        // CRITICAL FIX: NEVER run this on the product list page (Home or /productos)
-        // React manages the list grid, and modifying it causes a crash (NotFoundError)
-        const path = window.location.pathname;
-        if (path === '/' || path === '/productos' || path === '/category' || path === '/search') {
-            return;
-        }
-
         // OPTIMIZATION: Only look for specific containers or elements that look like descriptions
         // Avoid touching the main product grid structure which React manages heavily
         const candidates = node.querySelectorAll ? node.querySelectorAll('.product-description, .description, [class*="desc"], p') : [];
