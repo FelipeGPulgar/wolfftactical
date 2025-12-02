@@ -99,40 +99,71 @@
     function fixRawHtml(node) {
         if (!node || node.nodeType !== Node.ELEMENT_NODE) return;
 
-        // OPTIMIZATION: Only look for specific containers or elements that look like descriptions
-        // Avoid touching the main product grid structure which React manages heavily
-        const candidates = node.querySelectorAll ? node.querySelectorAll('.product-description, .description, [class*="desc"], p') : [];
+        // 1. STRATEGY A: Look for specific headers (DESCRIPCIÓN, INCLUYE)
+        // This is the most reliable method for the product page
+        const headers = Array.from(node.querySelectorAll('h1, h2, h3, h4, h5, h6, div, span, strong'));
+        headers.forEach(header => {
+            const txt = (header.innerText || '').trim().toUpperCase();
+            if (txt === 'DESCRIPCIÓN' || txt === 'INCLUYE') {
+                // Look at next sibling
+                let target = header.nextElementSibling;
+
+                // If not found, maybe the header is wrapped?
+                if (!target && header.parentElement) {
+                    // Check if parent's next sibling is the content
+                    if (header.parentElement.nextElementSibling) {
+                        target = header.parentElement.nextElementSibling;
+                    }
+                }
+
+                if (target && !target.dataset.htmlFixed) {
+                    const content = target.innerText || '';
+                    // Check if it looks like HTML tags
+                    if (content.includes('<') && content.includes('>') && (content.includes('</') || content.includes('/>'))) {
+                        // console.log('Patch: Fixing HTML via Header Strategy for', txt);
+                        try {
+                            target.innerHTML = content;
+                            target.dataset.htmlFixed = 'true';
+                            target.classList.add('product-description-formatted');
+                        } catch (e) { }
+                    }
+                }
+            }
+        });
+
+        // 2. STRATEGY B: General heuristic (fallback)
+        const candidates = node.querySelectorAll ? node.querySelectorAll('.product-description, .description, [class*="desc"], p, div') : [];
 
         candidates.forEach(el => {
             if (el.dataset.htmlFixed) return;
             if (el.closest('.ql-editor') || el.closest('textarea') || el.contentEditable === 'true') return;
-
-            // Skip if already formatted by server
             if (el.classList.contains('product-description-formatted') || el.dataset.serverFormatted) return;
-
-            // Skip if parent already has formatted content
             if (el.closest('.product-description-formatted')) return;
 
             const text = el.innerText || '';
 
-            // STRICTER CHECK: Only fix if it DEFINITELY looks like broken HTML
-            // Must contain tags AND be longer than a simple string
-            if (text.includes('<') && text.includes('>') && (text.includes('<p>') || text.includes('<ul>') || text.includes('<br>') || text.includes('<strong>'))) {
+            // Must contain tags
+            if (!text.includes('<') || !text.includes('>')) return;
 
-                // Safety checks
+            // Must look like a paragraph or list
+            if (text.includes('<p>') || text.includes('<ul>') || text.includes('<br>') || text.includes('<strong>') || text.includes('<div>')) {
+
+                // Safety: Don't break interactive elements
                 if (el.querySelector('button, input, select, img, form, video, iframe')) return;
-                if (el.querySelectorAll(':scope > div').length > 0) return; // Don't touch if it has div children (layout)
-                if (text.length < 10) return;
+
+                // Safety: Don't replace if it has many children (likely layout)
+                // But allow if it has 0 or 1 children (often the text node is wrapped in a single div)
+                if (el.children.length > 2) return;
+
+                if (text.length < 5) return;
                 if (el.tagName === 'CODE' || el.tagName === 'PRE') return;
 
                 try {
-                    // console.log('Patch: Fixing HTML for', el);
+                    // console.log('Patch: Fixing HTML via Heuristic for', el);
                     el.innerHTML = text;
                     el.dataset.htmlFixed = 'true';
                     el.classList.add('product-description-formatted');
-                } catch (e) {
-                    // console.error('Patch: Error fixing HTML', e);
-                }
+                } catch (e) { }
             }
         });
     }
