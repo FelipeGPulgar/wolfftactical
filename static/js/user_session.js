@@ -380,34 +380,38 @@
         // Only on homepage
         if (window.location.pathname !== '/' && window.location.pathname !== '/index.html') return;
 
-        // Check if already injected
-        if (document.getElementById('home-intro-video')) return;
+        // PREVENT DUPLICATES: Remove if already exists (to be safe against re-renders)
+        const existing = document.getElementById('home-intro-video');
+        if (existing) existing.remove();
 
-        // Find the Footer
+        // 1. Try to append to <main> (Best for "between section and footer")
+        const main = document.querySelector('main');
         const footer = document.querySelector('footer');
 
-        if (footer) {
-            const videoSection = document.createElement('div');
-            videoSection.id = 'home-intro-video';
-            videoSection.className = 'w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12';
-            videoSection.innerHTML = `
-                <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-800 bg-gray-900">
-                    <video 
-                        class="w-full h-auto object-cover" 
-                        autoplay 
-                        muted 
-                        loop 
-                        playsinline
-                        poster="/static/images/video-poster.jpg"
-                    >
-                        <source src="/video/Intro.mp4" type="video/mp4">
-                        Tu navegador no soporta el elemento de video.
-                    </video>
-                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent pointer-events-none"></div>
-                </div>
-            `;
+        const videoSection = document.createElement('div');
+        videoSection.id = 'home-intro-video';
+        videoSection.className = 'w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mb-8'; // Added mb-8 for spacing
+        videoSection.innerHTML = `
+            <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-800 bg-gray-900">
+                <video 
+                    class="w-full h-auto object-cover" 
+                    autoplay 
+                    muted 
+                    loop 
+                    playsinline
+                    poster="/static/images/video-poster.jpg"
+                >
+                    <source src="/video/Intro.mp4" type="video/mp4">
+                    Tu navegador no soporta el elemento de video.
+                </video>
+                <div class="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent pointer-events-none"></div>
+            </div>
+        `;
 
-            // Insert BEFORE the footer
+        if (main) {
+            main.appendChild(videoSection);
+        } else if (footer) {
+            // Fallback: Insert before footer
             footer.parentNode.insertBefore(videoSection, footer);
         }
     }
