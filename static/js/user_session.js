@@ -302,10 +302,14 @@
                 }
                 if (data.action === 'change_password' && formElement) {
                     formElement.reset();
-                    showMsg('Contraseña cambiada. Cerrando sesión en 10 segundos...', 'green');
+                    // Clear session immediately to prevent "refresh cheating"
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('isAdminLoggedIn');
+
+                    showMsg('Contraseña cambiada. Cerrando sesión en 5 segundos...', 'green');
                     setTimeout(() => {
                         window.logout();
-                    }, 10000);
+                    }, 5000);
                 }
             } else {
                 showMsg(result.message, 'red');
