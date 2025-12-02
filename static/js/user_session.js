@@ -281,7 +281,16 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-            const result = await res.json();
+
+            const text = await res.text();
+            let result;
+            try {
+                result = JSON.parse(text);
+            } catch (jsonErr) {
+                console.error('Server returned non-JSON response:', text);
+                showMsg('Error del servidor (Ver consola)', 'red');
+                return;
+            }
 
             if (result.success) {
                 showMsg(result.message, 'green');
@@ -296,8 +305,10 @@
                 }
             } else {
                 showMsg(result.message, 'red');
+                if (result.debug) console.warn('Debug info:', result.debug);
             }
         } catch (err) {
+            console.error('Network or Logic Error:', err);
             showMsg('Error de conexión', 'red');
         }
     }
