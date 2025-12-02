@@ -383,35 +383,32 @@
         // Check if already injected
         if (document.getElementById('home-intro-video')) return;
 
-        // Look for the category container (the 3 images)
-        const images = Array.from(document.querySelectorAll('img'));
-        const categoryImg = images.find(img => img.src && (img.src.includes('BodyArmor') || img.src.includes('Tactical') || img.src.includes('Miras')));
+        // Find the Footer
+        const footer = document.querySelector('footer');
 
-        if (categoryImg) {
-            // Find the main container of these images
-            let container = categoryImg.closest('.grid') || categoryImg.closest('.flex');
+        if (footer) {
+            const videoSection = document.createElement('div');
+            videoSection.id = 'home-intro-video';
+            videoSection.className = 'w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12';
+            videoSection.innerHTML = `
+                <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-800 bg-gray-900">
+                    <video 
+                        class="w-full h-auto object-cover" 
+                        autoplay 
+                        muted 
+                        loop 
+                        playsinline
+                        poster="/static/images/video-poster.jpg"
+                    >
+                        <source src="/video/Intro.mp4" type="video/mp4">
+                        Tu navegador no soporta el elemento de video.
+                    </video>
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent pointer-events-none"></div>
+                </div>
+            `;
 
-            // Go up a few levels to find the section wrapper
-            if (container) {
-                // We want to insert AFTER this container
-                const videoSection = document.createElement('div');
-                videoSection.id = 'home-intro-video';
-                videoSection.className = 'w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12';
-                videoSection.innerHTML = `
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-800">
-                        <video class="w-full h-auto" autoplay loop muted playsinline controls>
-                            <source src="/video/Intro.mp4" type="video/mp4">
-                            Tu navegador no soporta el tag de video.
-                        </video>
-                        <div class="absolute inset-0 pointer-events-none bg-gradient-to-t from-slate-900/50 to-transparent"></div>
-                    </div>
-                `;
-
-                // Insert after the container
-                if (container.parentElement) {
-                    container.parentElement.insertBefore(videoSection, container.nextSibling);
-                }
-            }
+            // Insert BEFORE the footer
+            footer.parentNode.insertBefore(videoSection, footer);
         }
     }
 
