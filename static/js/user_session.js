@@ -379,49 +379,48 @@
     function manageHomeVideo() {
         // Check if we are on the homepage
         const isHome = window.location.pathname === '/' || window.location.pathname === '/index.html';
-        const existing = document.getElementById('home-intro-video');
 
-        // CRITICAL: If NOT on homepage, remove the video if it exists
-        if (!isHome) {
-            if (existing) existing.remove();
-            return;
-        }
+        // Cleanup: Remove ANY existing video instances to prevent duplication
+        const existing = document.querySelectorAll('#home-intro-video');
+        existing.forEach(el => el.remove());
 
-        // If on homepage and already exists, do nothing
-        if (existing) return;
+        // CRITICAL: If NOT on homepage, we are done (we just cleaned up)
+        if (!isHome) return;
 
-        // 1. Try to append to <main> (Best for "between section and footer")
-        const main = document.querySelector('main');
-        const footer = document.querySelector('footer');
+        // Find the Category Section (The 3 images: Body Armor, Tactical, Miras)
+        // This places the video in the middle of the page, not at the footer
+        const images = Array.from(document.querySelectorAll('img'));
+        const categoryImg = images.find(img => img.src && (img.src.includes('BodyArmor') || img.src.includes('Tactical') || img.src.includes('Miras')));
 
-        const videoSection = document.createElement('div');
-        videoSection.id = 'home-intro-video';
-        // Use transparent background and padding to separate from footer
-        videoSection.className = 'w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12';
-        videoSection.style.marginBottom = '50px'; // Explicit spacing
+        if (categoryImg) {
+            // Find the main container of these images
+            let container = categoryImg.closest('.grid') || categoryImg.closest('.flex');
 
-        videoSection.innerHTML = `
-            <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-800 bg-gray-900">
-                <video 
-                    class="w-full h-auto object-cover" 
-                    autoplay 
-                    muted 
-                    loop 
-                    playsinline
-                    poster="/static/images/video-poster.jpg"
-                >
-                    <source src="/video/Intro.mp4" type="video/mp4">
-                    Tu navegador no soporta el elemento de video.
-                </video>
-                <div class="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent pointer-events-none"></div>
-            </div>
-        `;
+            // If found, insert AFTER it
+            if (container && container.parentElement) {
+                const videoSection = document.createElement('div');
+                videoSection.id = 'home-intro-video';
+                videoSection.className = 'w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12';
+                videoSection.innerHTML = `
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-800 bg-gray-900">
+                        <video 
+                            class="w-full h-auto object-cover" 
+                            autoplay 
+                            muted 
+                            loop 
+                            playsinline
+                            poster="/static/images/video-poster.jpg"
+                        >
+                            <source src="/video/Intro.mp4" type="video/mp4">
+                            Tu navegador no soporta el elemento de video.
+                        </video>
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent pointer-events-none"></div>
+                    </div>
+                `;
 
-        if (main) {
-            main.appendChild(videoSection);
-        } else if (footer) {
-            // Fallback: Insert before footer
-            footer.parentNode.insertBefore(videoSection, footer);
+                // Insert AFTER the category container
+                container.parentElement.insertBefore(videoSection, container.nextSibling);
+            }
         }
     }
 
