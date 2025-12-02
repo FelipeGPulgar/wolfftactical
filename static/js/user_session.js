@@ -253,7 +253,7 @@
         const data = Object.fromEntries(formData.entries());
         data.action = 'update_profile';
 
-        await sendRequest(data);
+        await sendRequest(data, e.target);
     };
 
     window.changePassword = async function (e) {
@@ -267,10 +267,10 @@
             return;
         }
 
-        await sendRequest(data);
+        await sendRequest(data, e.target);
     };
 
-    async function sendRequest(data) {
+    async function sendRequest(data, formElement = null) {
         const msg = document.getElementById('modalMsg');
         msg.innerText = 'Procesando...';
         msg.style.color = '#94a3b8';
@@ -300,8 +300,8 @@
                     user.name = data.name;
                     localStorage.setItem('currentUser', JSON.stringify(user));
                 }
-                if (data.action === 'change_password') {
-                    e.target.reset();
+                if (data.action === 'change_password' && formElement) {
+                    formElement.reset();
                 }
             } else {
                 showMsg(result.message, 'red');
