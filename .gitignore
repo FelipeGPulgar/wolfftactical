@@ -1,0 +1,28 @@
+# System
+.DS_Store
+Thumbs.db
+
+# Dependencies
+node_modules/
+vendor/
+
+# Environment & Config (Optional: keep db.php if it's the same for prod, otherwise ignore)
+# .env
+# backend/db.php
+
+# Uploads (Don't overwrite server images)
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+
+# Logs
+*.log
+error_log
+
+# IDE
+.vscode/
+.idea/

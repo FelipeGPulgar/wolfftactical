@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="es-CL">
+
+<head>
+	<!-- CRITICAL: Security Redirects -->
+	<script>
+		(function () {
+			// 1. Intercept Clicks (Prevent React Router from handling /login)
+			document.addEventListener('click', function (e) {
+				var target = e.target.closest('a');
+				if (target && target.getAttribute('href') === '/login') {
+					e.preventDefault();
+					e.stopPropagation();
+					window.location.href = '/backend/login.php';
+					return false;
+				}
+			}, true);
+
+			// 2. Security Check & Redirect
+			function secureRedirect() {
+				var path = window.location.pathname;
+				if (path.endsWith('/')) path = path.slice(0, -1);
+
+				if (path === '/backend/productos' || path === '/login') {
+					// Hide body ONLY for restricted routes
+					document.documentElement.style.visibility = 'hidden';
+					document.documentElement.style.opacity = '0';
+
+					try { window.stop(); } catch (e) { }
+					document.documentElement.innerHTML = '';
+
+					if (path.includes('/login')) window.location.replace('/backend/login.php');
+					else window.location.replace('/backend/productos.php');
+					return true;
+				}
+				return false;
+			}
+
+			// Check immediately
+			if (secureRedirect()) {
+				throw new Error('Security Redirect');
+			}
+
+			// Continuous check
+			setInterval(secureRedirect, 50);
+
+			// Unregister SW
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker.getRegistrations().then(function (regs) {
+					for (let reg of regs) reg.unregister();
+				});
+			}
+		})();
+	</script>
+	<meta charset="utf-8" />
+	<link rel="icon" href="/favicon.ico" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<meta name="theme-color" content="#000000" />
+	<title>Wolf Tactical Chile - Artículos y Equipamiento Táctico Profesional</title>
+	<meta name="title" content="Wolf Tactical Chile - Artículos y Equipamiento Táctico Profesional" />
+	<meta name="description"
+		content="Tienda líder en artículos tácticos en Chile. Venta de ropa táctica, chalecos, mochilas, botas, accesorios de airsoft, seguridad privada y equipamiento militar de alta calidad." />
+	<meta name="keywords"
+		content="artículos tácticos chile, equipamiento táctico, tienda táctica chile, productos tácticos, gear táctico, accesorios tácticos, wolf tactical, equipamiento policial, equipamiento militar, ropa táctica, chalecos tácticos, mochilas tácticas, airsoft chile, seguridad privada, camping, outdoor, defensa personal, botas tácticas" />
+	<meta name="author" content="Wolf Tactical Chile" />
+	<meta name="robots" content="index, follow" />
+	<meta name="language" content="Spanish" />
+	<meta name="revisit-after" content="7 days" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://wolfftactical.cl/" />
+	<meta property="og:title" content="Wolf Tactical Chile - Artículos y Equipamiento Táctico Profesional" />
+	<meta property="og:description"
+		content="Tienda líder en artículos tácticos en Chile. Venta de ropa táctica, chalecos, mochilas, botas, accesorios de airsoft, seguridad privada y equipamiento militar de alta calidad." />
+	<meta property="og:image" content="https://wolfftactical.cl/static/media/Carrusel3.9dd79b765acc207ed368.png" />
+	<meta property="og:site_name" content="Wolf Tactical Chile" />
+	<meta property="og:locale" content="es_CL" />
+	<meta property="twitter:card" content="summary_large_image" />
+	<meta property="twitter:url" content="https://wolfftactical.cl/" />
+	<meta property="twitter:title" content="Wolf Tactical Chile - Artículos y Equipamiento Táctico Profesional" />
+	<meta property="twitter:description"
+		content="Tienda líder en artículos tácticos en Chile. Venta de ropa táctica, chalecos, mochilas, botas, accesorios de airsoft, seguridad privada y equipamiento militar de alta calidad." />
+	<meta property="twitter:image" content="https://wolfftactical.cl/static/media/Carrusel3.9dd79b765acc207ed368.png" />
+	<meta name="geo.region" content="CL" />
+	<meta name="geo.placename" content="Chile" />
+	<meta name="geo.position" content="-33.4489;-70.6693" />
+	<meta name="ICBM" content="-33.4489, -70.6693" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+	<link rel="manifest" href="/manifest.json" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+	<!-- Small fix: hide Google One-Tap / GSI button injected by compiled JS until frontend is rebuilt -->
+	<style>
+		/* Hide common GSI button containers and iframes coming from accounts.google.com */
+		.g_id_signin,
+		.g_id_signin * {
+			display: none !important;
+		}
+
+		iframe[src*="accounts.google.com"] {
+			display: none !important;
+			visibility: hidden !important;
+		}
+	</style>
+	<script>
+		// Remove any GSI elements after app mounts (best-effort client-side cleanup)
+		window.addEventListener('load', function () {
+			try {
+				var els = document.querySelectorAll('.g_id_signin');
+				els.forEach(function (e) { e.remove(); });
+				var ifs = document.querySelectorAll('iframe');
+				ifs.forEach(function (i) { if (i.src && i.src.indexOf('accounts.google.com') !== -1) i.remove(); });
+			} catch (e) { console.error('GSI removal error', e); }
+		});
+	</script>
+
+	<!-- Block Google GSI script and stub window.google to prevent runtime calls -->
+	<!-- Block Google GSI script and stub window.google to prevent runtime calls -->
+	<script>
+		(function () {
+			try {
+				// 1. Prevent loading external GSI script by blocking script src assignment
+				const desc = Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype, 'src');
+				if (desc && desc.set) {
+					Object.defineProperty(HTMLScriptElement.prototype, 'src', {
+						set: function (v) {
+							if (typeof v === 'string' && v.indexOf('accounts.google.com') !== -1) {
+								// console.warn('Blocked external script:', v); // Suppressed log
+								return; // ignore setting src to GSI
+							}
+							return desc.set.call(this, v);
+						}
+					});
+				}
+				// 2. Intercept appendChild to avoid dynamically appended GSI iframes/scripts
+				const origAppend = Element.prototype.appendChild;
+				Element.prototype.appendChild = function (child) {
+					try {
+						if (child && child.src && typeof child.src === 'string' && child.src.indexOf('accounts.google.com') !== -1) {
+							// console.warn('Blocked appendChild of external GSI element', child.src); // Suppressed log
+							return child;
+						}
+					} catch (e) { }
+					return origAppend.call(this, child);
+				};
+				// 3. Intercept insertBefore
+				const origInsert = Element.prototype.insertBefore;
+				Element.prototype.insertBefore = function (newNode, referenceNode) {
+					try {
+						if (newNode && newNode.src && typeof newNode.src === 'string' && newNode.src.indexOf('accounts.google.com') !== -1) {
+							return newNode;
+						}
+					} catch (e) { }
+					return origInsert.call(this, newNode, referenceNode);
+				};
+
+				// 4. Provide a harmless stub for window.google and related methods used by compiled app
+				window.google = window.google || {};
+				window.google.accounts = window.google.accounts || {};
+				window.google.accounts.id = window.google.accounts.id || {
+					initialize: function () { /* console.warn('google.accounts.id.initialize blocked'); */ },
+					renderButton: function () { },
+					prompt: function () { },
+					cancel: function () { },
+					disableAutoSelect: function () { },
+					storeCredential: function () { },
+					revoke: function () { }
+				};
+			} catch (err) { console.error('GSI blocker error', err); }
+		})();
+	</script>
+	<!-- Ensure requests include cookies so PHP session is sent to backend (fix 401 Unauthorized) -->
+	<script>
+		(function () {
+			try {
+				// Wrap fetch to default to credentials: 'include' when not provided
+				if (window.fetch) {
+					const origFetch = window.fetch.bind(window);
+					window.fetch = function (resource, init) {
+						if (!init) init = {};
+						if (!('credentials' in init)) init.credentials = 'include';
+						return origFetch(resource, init);
+					};
+				}
+				// Also ensure XHR sends credentials by default
+				if (window.XMLHttpRequest) {
+					const OrigXHR = window.XMLHttpRequest;
+					function XHRWithCreds() {
+						const xhr = new OrigXHR();
+						const origOpen = xhr.open.bind(xhr);
+						xhr.open = function () { origOpen.apply(xhr, arguments); };
+						// Force withCredentials true for cross-site cookies
+						xhr.withCredentials = true;
+						return xhr;
+					}
+					// Copy prototype to keep instanceof checks
+					XHRWithCreds.prototype = OrigXHR.prototype;
+					window.XMLHttpRequest = XHRWithCreds;
+				}
+			} catch (e) { console.error('Fetch/XHR credentials shim failed', e); }
+		})();
+	</script>
+	<!-- Mitigación temporal: polyfill para ReactDOM.findDOMNode (intento de evitar error runtime) -->
+	<script>
+		(function () {
+			try {
+				// Best-effort shim: many legacy libs call ReactDOM.findDOMNode(ref)
+				if (!window.ReactDOM) window.ReactDOM = {};
+				if (typeof window.ReactDOM.findDOMNode !== 'function') {
+					window.ReactDOM.findDOMNode = function (inst) {
+						try {
+							if (!inst) return null;
+							// If it's already a DOM node
+							if (inst.nodeType || inst instanceof Element) return inst;
+							// If it's a ref object { current: ... }
+							if (inst.current) {
+								var cur = inst.current;
+								if (cur.nodeType || cur instanceof Element) return cur;
+								return cur;
+							}
+							// Fallback: try to find a DOM node property commonly used
+							if (inst.getDOMNode && typeof inst.getDOMNode === 'function') {
+								return inst.getDOMNode();
+							}
+						} catch (e) {/* swallow */ }
+						return null;
+					};
+				}
+				// Also expose a global alias in case bundle references other names
+				if (!window.findDOMNode) window.findDOMNode = window.ReactDOM.findDOMNode;
+				// Provide a more robust global shim used by patched bundles
+				window.__shim_findDOMNode = window.__shim_findDOMNode || function (inst) {
+					try {
+						if (!inst) return null;
+						if (inst.nodeType || inst instanceof Element) return inst;
+						if (inst.current) { var c = inst.current; if (c.nodeType || c instanceof Element) return c; return c; }
+						if (inst.getDOMNode && typeof inst.getDOMNode === 'function') return inst.getDOMNode();
+					} catch (e) { }
+					return null;
+				};
+			} catch (err) { console.error('findDOMNode shim error', err); }
+		})();
+	</script>
+
+	<!-- Interceptor: cuando el login AJAX devuelve { redirect: '/admin/productos.php' }, hacer una carga completa -->
+	<script>
+		(function () {
+			try {
+				if (!window.fetch) return;
+				const _fetch = window.fetch.bind(window);
+				window.fetch = async function (resource, init) {
+					const response = await _fetch(resource, init);
+					try {
+						var url = '';
+						if (typeof resource === 'string') url = resource;
+						else if (resource && resource.url) url = resource.url;
+
+						// Interceptar sólo la llamada al login
+						if (url && url.indexOf('login.php') !== -1) {
+							// Clonar respuesta para no romper el flujo original
+							const clone = response.clone();
+							const text = await clone.text();
+							try {
+								const data = JSON.parse(text);
+								if (data && data.redirect) {
+									// Forzar carga completa a la ruta indicada (evita navegación SPA)
+									window.location.replace(data.redirect);
+								}
+							} catch (e) {
+								// ignorar si no es JSON
+							}
+						}
+					} catch (err) {
+						console.error('Fetch interceptor error', err);
+					}
+					return response;
+				};
+			} catch (e) { console.error('Failed to install fetch interceptor', e); }
+		})();
+	</script>
+
+	<!-- If backend redirected to /?logout=1, rewrite URL to /login before React mounts -->
+	<script>
+		(function () {
+			try {
+				var params = new URLSearchParams(window.location.search || '');
+				if (params.get('logout') === '1' || params.get('login_required') === '1') {
+					// Ensure local client-side state is cleared
+					try { localStorage.removeItem('isAdminLoggedIn'); } catch (e) { }
+					// Replace browser URL to the SPA login route without navigating (avoids server 404)
+					history.replaceState(null, '', '/login');
+				}
+			} catch (e) { console.error('logout redirect handler error', e); }
+		})();
+	</script>
+
+	<script defer="defer" src="/static/js/main.43954683.js"></script>
+	<link href="/static/css/main.b44f8b52.css" rel="stylesheet">
+	<link href="/static/css/admin_patch.css?v=2" rel="stylesheet">
+	<script src="/static/js/security.js"></script>
+</head>
+
+<body>
+	<noscript>You need to enable JavaScript to run this app.</noscript>
+	<div id="root"></div>
+	<script src="/static/js/admin_patch.js?v=2"></script>
+	<script src="/static/js/user_session.js?v=1"></script>
+</body>
+
+</html>

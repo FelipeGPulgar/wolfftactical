@@ -1,0 +1,771 @@
+/* Admin Patch Styles */
+
+/* Centered Layout for Add/Edit Product */
+.admin-centered-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+}
+
+/* Make the inner form cards responsive */
+.admin-centered-layout>div {
+    width: 100% !important;
+    max-width: 900px !important;
+    /* Limit width for better readability */
+}
+
+/* Ensure inputs and cards use full width within the centered container */
+.admin-centered-layout form {
+    width: 100% !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .admin-centered-layout {
+        padding: 10px !important;
+    }
+
+    .admin-centered-layout>div {
+        max-width: 100% !important;
+    }
+}
+
+/* Style for the moved subtitle */
+.admin-subtitle-moved {
+    font-family: inherit;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 20px;
+}
+
+/* Theme variables and overrides to apply a consistent admin look */
+:root {
+    --tac-bg: #0f1724;
+    --tac-panel: #0b1220;
+    --tac-accent: #1766ff;
+    --tac-accent-2: #0ea5a4;
+    --tac-muted: #9aa4b2;
+    --tac-card: #0b1220;
+    --tac-border: rgba(255, 255, 255, 0.04);
+}
+
+/* General admin containers */
+aside,
+.admin-nav,
+.admin-sidebar,
+.sidebar,
+.panel,
+.admin-left {
+    background: var(--tac-bg) !important;
+    color: #e6eef8 !important;
+}
+
+.admin-centered-layout .card,
+.panel-card,
+.product-form,
+.form-card {
+    background: var(--tac-card) !important;
+    border: 1px solid var(--tac-border) !important;
+    color: #e6eef8 !important;
+}
+
+.input-tactical,
+.form-control,
+.form-select,
+input,
+textarea {
+    background: transparent !important;
+    border: 1px solid var(--tac-border) !important;
+    color: #e6eef8 !important;
+}
+
+.btn-edit,
+.btn-primary,
+.publish-btn {
+    background: var(--tac-accent) !important;
+    color: #fff !important;
+    border-radius: 6px !important;
+    padding: 8px 12px !important;
+}
+
+/* Ensure tables are responsive and readable on small screens */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.productos-table th,
+.productos-table td {
+    white-space: nowrap;
+}
+
+@media (max-width: 1024px) {
+    .admin-centered-layout {
+        padding: 8px !important;
+    }
+
+    .admin-subtitle-moved {
+        text-align: left !important;
+    }
+
+    .productos-table thead {
+        display: none;
+    }
+
+    .productos-table tbody td {
+        display: block;
+        width: 100%;
+    }
+
+    .productos-table tbody tr {
+        display: block;
+        margin-bottom: 12px;
+        border-bottom: 1px solid var(--tac-border);
+    }
+}
+
+/* Small helper to hide Modelo column if not removed server-side */
+.productos-table th.modelo,
+.productos-table td.modelo {
+    display: none !important;
+}
+
+/* Extended admin styling to match 'Agregar Producto' design across the admin */
+:root {
+    --tac-heading: #e6eef8;
+    --tac-muted-2: rgba(230, 238, 248, 0.35);
+}
+
+/* Card / panel appearance */
+.card,
+.panel-card,
+.product-form,
+.form-card,
+.admin-centered-layout>div {
+    background: linear-gradient(180deg, rgba(11, 18, 32, 0.9), rgba(8, 12, 22, 0.85)) !important;
+    border: 1px solid rgba(255, 255, 255, 0.03) !important;
+    color: var(--tac-heading) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 6px 18px rgba(3, 6, 12, 0.6) !important;
+}
+
+/* Inputs and selects */
+.input-tactical,
+.form-control,
+.form-select,
+input,
+textarea {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.04) !important;
+    color: var(--tac-heading) !important;
+    padding: 12px !important;
+    border-radius: 8px !important;
+}
+
+.input-tactical::placeholder,
+input::placeholder,
+textarea::placeholder {
+    color: var(--tac-muted-2) !important;
+}
+
+/* Buttons */
+.btn-edit,
+.btn-primary,
+.publish-btn,
+.btn,
+.btn-glass {
+    background: linear-gradient(90deg, var(--tac-accent), #2b6df6) !important;
+    color: #fff !important;
+    border-radius: 10px !important;
+    padding: 10px 14px !important;
+    border: none !important;
+    box-shadow: 0 8px 20px rgba(23, 102, 255, 0.15) !important;
+}
+
+.btn-secondary-glass {
+    background: rgba(255, 255, 255, 0.03) !important;
+    color: var(--tac-heading) !important;
+    border: 1px solid rgba(255, 255, 255, 0.04) !important
+}
+
+/* Sidebar */
+.admin-nav,
+.admin-sidebar {
+    padding: 20px !important;
+}
+
+.admin-nav .admin-nav-item {
+    margin-bottom: 8px !important;
+}
+
+.admin-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 8px;
+}
+
+.admin-nav-link:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Stronger blue theme for the entire admin sidebar (remove gray) */
+.admin-sidebar,
+aside {
+    background: linear-gradient(180deg, #071433 0%, #0b2a6f 100%) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.03) !important;
+}
+
+.admin-nav-link,
+.admin-nav-link a {
+    color: rgba(230, 238, 248, 0.9) !important;
+}
+
+.admin-nav-link .fa-solid {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Remove grey panels in sidebar items */
+.admin-sidebar .panel,
+.admin-sidebar .card {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Disable horizontal scroll on admin pages */
+html,
+body {
+    overflow-x: hidden !important;
+}
+
+main,
+.admin-content,
+.productos-admin-container {
+    overflow-x: hidden !important;
+}
+
+.table-responsive {
+    overflow-x: hidden !important;
+}
+
+/* Make product table wrap instead of causing horizontal scroll */
+.productos-table {
+    width: 100% !important;
+    table-layout: auto !important;
+    max-width: 100% !important;
+}
+
+.productos-table thead th,
+.productos-table tbody td {
+    white-space: normal !important;
+    word-break: break-word !important;
+}
+
+.productos-table tbody td img {
+    max-width: 56px !important;
+    max-height: 56px !important;
+}
+
+/* Reduce padding and font-size for smaller screens to avoid overflow */
+.productos-table thead th,
+.productos-table tbody td {
+    padding: 12px !important;
+    font-size: 0.95rem !important;
+}
+
+@media (max-width: 1200px) {
+
+    /* Make actions wrap and reduce padding to prevent horizontal overflow */
+    .productos-table thead th {
+        font-size: 0.95rem !important;
+    }
+
+    .productos-table tbody td {
+        padding: 10px !important;
+    }
+
+    .productos-table .actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 900px) {
+
+    /* Hide less-important columns on smaller screens to preserve layout */
+    .productos-table thead th:nth-child(1),
+    .productos-table tbody td:nth-child(1) {
+        display: none !important;
+    }
+
+    /* hide ID */
+    .productos-table thead th:nth-child(6),
+    .productos-table tbody td:nth-child(6) {
+        display: none !important;
+    }
+
+    /* hide Estado if present */
+    .productos-table thead th,
+    .productos-table tbody td {
+        font-size: 0.92rem !important;
+    }
+}
+
+@media (max-width: 640px) {
+
+    /* Mobile: stack cells vertically and reduce text size */
+    .productos-table thead {
+        display: none !important;
+    }
+
+    .productos-table tbody tr {
+        display: block !important;
+        margin-bottom: 14px !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .productos-table tbody td {
+        display: block !important;
+        width: 100% !important;
+        padding: 10px 8px !important;
+    }
+
+    .productos-table tbody td img {
+        max-width: 48px !important;
+        max-height: 48px !important;
+    }
+
+    .productos-table tbody td .actions {
+        margin-top: 8px;
+    }
+}
+
+/* If some elements still produce horizontal scroll, hide their overflow */
+.admin-centered-layout,
+.card,
+.panel-card {
+    overflow-x: hidden !important;
+}
+
+/* Accent color adjustments: replace muted greys with the blue accent */
+.productos-table thead th {
+    background: linear-gradient(90deg, rgba(11, 18, 32, 0.9), rgba(8, 12, 22, 0.85)) !important;
+    color: #dfefff !important;
+}
+
+.btn-delete {
+    background: #e03a4e !important;
+}
+
+.btn-edit {
+    background: linear-gradient(90deg, var(--tac-accent), #2b6df6) !important;
+}
+
+/* Titles */
+.admin-content header h1,
+.admin-content header h2,
+.page-title,
+.product-form h2,
+.productos-header h2 {
+    color: var(--tac-heading) !important;
+    font-weight: 700 !important
+}
+
+/* Product list */
+.productos-admin-container {
+    padding: 8px 16px !important;
+}
+
+.productos-header h2 {
+    color: var(--tac-heading) !important;
+    font-size: 1.1rem;
+}
+
+.productos-table thead th {
+    background: rgba(255, 255, 255, 0.03);
+    color: #d7e6f7;
+    font-weight: 600;
+    padding: 18px;
+}
+
+.productos-table tbody td {
+    padding: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.02);
+    color: #d6dfe8
+}
+
+/* Form layout */
+.form-section {
+    background: linear-gradient(180deg, rgba(10, 14, 20, 0.45), rgba(8, 12, 22, 0.45));
+    padding: 18px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+/* Responsive tweaks for very small screens */
+@media (max-width: 640px) {
+    .admin-nav {
+        display: flex;
+        gap: 8px;
+        overflow: auto
+    }
+
+    .admin-nav-link {
+        padding: 10px !important
+    }
+
+    .admin-centered-layout {
+        padding: 12px !important
+    }
+}
+
+/* Client-Side Description Formatting */
+.product-description-formatted {
+    color: #e6eef8;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.product-description-formatted p {
+    margin-bottom: 1rem;
+}
+
+.product-description-formatted ul,
+.product-description-formatted ol {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+}
+
+.product-description-formatted ul {
+    list-style-type: disc;
+}
+
+.product-description-formatted ol {
+    list-style-type: decimal;
+}
+
+.product-description-formatted li {
+    margin-bottom: 0.5rem;
+    color: #d1d5db;
+}
+
+.product-description-formatted strong,
+.product-description-formatted b {
+    color: #fff;
+    font-weight: 700;
+}
+
+.product-description-formatted h1,
+.product-description-formatted h2,
+.product-description-formatted h3 {
+    color: #fff;
+    font-weight: 700;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.product-description-formatted a {
+    color: var(--tac-accent);
+    text-decoration: underline;
+}
+
+/* Layout Utilities for Product Redesign */
+.flex {
+    display: flex !important;
+}
+
+.gap-4 {
+    gap: 1rem !important;
+}
+
+.w-full {
+    width: 100% !important;
+}
+
+.flex-1 {
+    flex: 1 1 0% !important;
+}
+
+.product-options-row {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* CSS Grid Layout for Product Info Section */
+.product-info-section {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 1.5rem !important;
+    width: 100% !important;
+}
+
+/* Full width elements */
+.product-info-section>div:first-child,
+/* Title/Price container */
+.product-info-section>.product-description-formatted,
+/* Description & Include */
+.product-info-section>.action-buttons {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+}
+
+/* Side-by-side elements */
+/* We target the Color and Quantity groups specifically */
+/* Using nth-last-child logic or :has if supported, but let's try a robust approach */
+
+/* Color Section (usually the 4th child: Title, Desc, Include, Color) */
+/* But let's use the label content if possible? No, CSS can't select by text. */
+/* We'll assume the structure: Title -> Desc -> Include -> Color -> Qty -> Buttons */
+/* That makes Color: 4th, Qty: 5th */
+
+.product-info-section>.info-group:nth-last-child(3) {
+    /* Color */
+    grid-column: 1 / 2 !important;
+}
+
+.product-info-section>.info-group:nth-last-child(2) {
+    /* Quantity */
+    grid-column: 2 / 3 !important;
+}
+
+/* Fallback: If the browser supports :has (Chrome/Edge/Safari do) */
+.product-info-section>.info-group:has(.color-selector) {
+    grid-column: 1 / 2 !important;
+}
+
+.product-info-section>.info-group:has(input[type="number"]) {
+    grid-column: 2 / 3 !important;
+}
+
+/* Ensure the inputs inside fill the column */
+.product-info-section>.info-group {
+    width: 100% !important;
+}
+
+.color-selector,
+.form-control-glass {
+    width: 100% !important;
+}
+
+/* RESPONSIVE DESIGN FIXES */
+
+/* Limit maximum width so it doesn't stretch infinitely */
+.product-detail-wrapper,
+.product-info-section {
+    max-width: 1200px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+/* Tablet and Mobile: Stack the main wrapper (Images on top, Info below) */
+@media (max-width: 1024px) {
+    .product-detail-wrapper {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 2rem !important;
+    }
+
+    .product-images-section,
+    .product-info-section {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* Mobile: Stack the Grid elements (Color and Quantity) */
+@media (max-width: 768px) {
+    .product-info-section {
+        grid-template-columns: 1fr !important;
+        /* Single column */
+        gap: 1rem !important;
+    }
+
+    /* Reset column assignments to stack everything */
+    .product-info-section>.info-group:nth-last-child(3),
+    /* Color */
+    .product-info-section>.info-group:nth-last-child(2),
+    /* Quantity */
+    .product-info-section>.info-group:has(.color-selector),
+    .product-info-section>.info-group:has(input[type="number"]) {
+        grid-column: 1 / -1 !important;
+    }
+
+    /* Adjust padding for mobile */
+    .product-detail-container {
+        padding: 1rem !important;
+    }
+}
+
+/* VIDEO CONTAINER FIX */
+/* Target iframe inside info-group or any video container */
+.info-group iframe,
+.info-group video,
+.product-info-section iframe {
+    width: 100% !important;
+    aspect-ratio: 16 / 9 !important;
+    height: auto !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    display: block !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 1.5rem !important;
+}
+
+/* GALLERY / THUMBNAILS FIX */
+.thumbnails-container {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 12px !important;
+    margin-top: 16px !important;
+    overflow-x: auto !important;
+    padding-bottom: 8px !important;
+    /* Space for scrollbar if needed */
+    justify-content: center !important;
+    /* Center thumbnails */
+}
+
+.thumbnail-image {
+    width: 80px !important;
+    height: 80px !important;
+    object-fit: cover !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    border: 2px solid transparent !important;
+    transition: all 0.2s ease !important;
+    opacity: 0.7 !important;
+}
+
+.thumbnail-image:hover {
+    opacity: 1 !important;
+    transform: translateY(-2px) !important;
+}
+
+.thumbnail-image.active {
+    border-color: var(--tac-accent) !important;
+    opacity: 1 !important;
+    box-shadow: 0 0 0 2px rgba(23, 102, 255, 0.3) !important;
+}
+
+/* Main Image Container Polish */
+.main-image-container {
+    background: transparent !important;
+    /* Remove any bg */
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+    position: relative !important;
+}
+
+.main-image {
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    object-fit: contain !important;
+    /* Ensure full image is visible */
+    max-height: 600px !important;
+    /* Limit height on large screens */
+    background: #0b1220 !important;
+    /* Dark bg for letterboxing */
+}
+/* EMERGENCY FIX: Force Dark Background */
+body, html, #root, .App {
+    background-color: #0f1724 !important;
+    color: #e6eef8 !important;
+}
+
+/* Fix for white modals or cards appearing on Add to Cart */
+.modal-content, .swal2-popup, .bg-white, .white-popup {
+    background-color: #0b1220 !important;
+    color: #e6eef8 !important;
+    border: 1px solid rgba(255,255,255,0.05) !important;
+}
+
+/* Ensure the product detail container is dark if it popped up as a modal */
+.product-detail-container {
+    background-color: #0b1220 !important;
+    border: 1px solid rgba(255,255,255,0.05) !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+}
+
+/* FIX LAYOUT SHIFT: Force Description/Include to be full width IMMEDIATELY */
+/* Do not wait for .product-description-formatted class */
+
+/* Assuming standard order: 1:Title, 2:Desc, 3:Include, 4:Color... */
+.product-info-section > div:nth-child(2),
+.product-info-section > div:nth-child(3) {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+}
+
+/* Also target by content if possible (using :has is safer for modern browsers) */
+.product-info-section > div:has(h3):has(ul), 
+.product-info-section > div:has(> p) {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+}
+
+/* Layout fixes - descriptions and includes take full width */
+.product-info-section > div:nth-child(2),
+.product-info-section > div:nth-child(3) {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+}
+
+/* Keep headers visible always */
+.product-info-section > div:nth-child(2) h3,
+.product-info-section > div:nth-child(3) h3,
+.product-info-section > div:nth-child(2) h4,
+.product-info-section > div:nth-child(3) h4 {
+    color: #e6eef8 !important;
+}
+
+/* Show formatted content properly */
+.product-info-section > div.product-description-formatted,
+.product-info-section > div .product-description-formatted {
+    color: #e6eef8 !important;
+}
+
+
+
+/* Only hide content that actually contains raw HTML tags in the text */
+div.info-group:not(.product-description-formatted) {
+    /* Only apply if content contains visible HTML tags */
+}
+
+div.info-group:not(.product-description-formatted):has(p):not(:has(input)):not(:has(button)) {
+    /* Target only paragraphs that might have raw HTML */
+}
+
+/* Ensure headers are always visible */
+div.info-group h3, div.info-group h4 {
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: #e6eef8 !important;
+}
+
+/* Smooth fade in when formatted */
+div.product-description-formatted {
+    color: #e6eef8 !important;
+}
+
+/* Ensure formatted content is visible */
+div.product-description-formatted,
+div.product-description-formatted * {
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: inherit !important;
+}
+
+/* Force visibility for any content with formatted class */
+.product-description-formatted {
+    opacity: 1 !important;
+    visibility: visible !important;
+    color: #e6eef8 !important;
+}

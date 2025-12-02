@@ -1,0 +1,22 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+RewriteRule ^admin/(.*)$ backend/$1 [L,R=301]
+
+  RewriteBase /
+  
+  # 1. Serve existing files and directories directly (PHP, images, CSS, JS)
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # 2. Redirect /login to /admin/login.php (Server-side fix)
+  RewriteRule ^login/?$ admin/login.php [R=301,L]
+
+  # 2. Redirect everything else to index.html (React SPA)
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Optional: Enable CORS if needed
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+</IfModule>

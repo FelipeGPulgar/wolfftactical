@@ -1,0 +1,16 @@
+# Prevent directory listing
+Options -Indexes
+
+# Deny access to sensitive files
+<FilesMatch "^(db\.php|composer\.json|composer\.lock|\.env)$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>
+
+# Allow access to specific PHP files and assets
+<FilesMatch "\.(php|jpg|jpeg|png|gif|pdf|webp)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+
+
