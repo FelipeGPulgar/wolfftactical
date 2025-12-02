@@ -101,12 +101,13 @@
     // =========================================
 
     function fixRawHtml(node) {
-        if (node.nodeType !== Node.ELEMENT_NODE) return;
+        if (!node || node.nodeType !== Node.ELEMENT_NODE) return;
 
-        const candidates = node.querySelectorAll ? node.querySelectorAll('p, div, span') : [];
-        const allNodes = [node, ...Array.from(candidates)];
+        // OPTIMIZATION: Only look for specific containers or elements that look like descriptions
+        // Avoid touching the main product grid structure which React manages heavily
+        const candidates = node.querySelectorAll ? node.querySelectorAll('.product-description, .description, [class*="desc"], p') : [];
 
-        allNodes.forEach(el => {
+        candidates.forEach(el => {
             if (el.dataset.htmlFixed) return;
             if (el.closest('.ql-editor') || el.closest('textarea') || el.contentEditable === 'true') return;
 
@@ -117,17 +118,19 @@
             if (el.closest('.product-description-formatted')) return;
 
             const text = el.innerText || '';
-            // Only process if we actually see raw HTML tags in the visible text
-            if ((text.includes('<p>') || text.includes('<ul>') || text.includes('<strong>') || text.includes('<br>')) && text.includes('>')) {
+
+            // STRICTER CHECK: Only fix if it DEFINITELY looks like broken HTML
+            // Must contain tags AND be longer than a simple string
+            if (text.includes('<') && text.includes('>') && (text.includes('<p>') || text.includes('<ul>') || text.includes('<br>') || text.includes('<strong>'))) {
 
                 // Safety checks
                 if (el.querySelector('button, input, select, img, form, video, iframe')) return;
-                if (el.querySelectorAll(':scope > div').length > 2) return;
-                if (text.length < 15) return;
+                if (el.querySelectorAll(':scope > div').length > 0) return; // Don't touch if it has div children (layout)
+                if (text.length < 10) return;
                 if (el.tagName === 'CODE' || el.tagName === 'PRE') return;
 
                 try {
-                    if (el.dataset.htmlFixed) return;
+                    // console.log('Patch: Fixing HTML for', el);
                     el.innerHTML = text;
                     el.dataset.htmlFixed = 'true';
                     el.classList.add('product-description-formatted');
