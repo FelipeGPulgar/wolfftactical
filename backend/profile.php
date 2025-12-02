@@ -90,16 +90,26 @@ try {
         $stmt->execute([$userId]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$user || !password_verify($currentPass, $user['password'])) {
+        if (!$user) {
+             throw new Exception("Usuario no encontrado en la base de datos");
+        }
+
+        if (!password_verify($currentPass, $user['password'])) {
+            // Debug: Return hash info if verification fails (remove in production)
+            // $debugInfo = ['input' => $currentPass, 'stored_hash' => $user['password']];
             throw new Exception("La contraseña actual es incorrecta");
         }
 
         // Update password
         $newHash = password_hash($newPass, PASSWORD_DEFAULT);
         $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
-        $stmt->execute([$newHash, $userId]);
+        $result = $stmt->execute([$newHash, $userId]);
+        
+        if (!$result) {
+             throw new Exception("Error al actualizar la base de datos");
+        }
 
-        echo json_encode(['success' => true, 'message' => 'Contraseña cambiada exitosamente']);
+        echo json_encode(['success' => true, 'message' => 'Contraseña cambiada exitosamente. Por favor inicia sesión con tu nueva clave.']);
     }
     else {
         throw new Exception("Acción no válida");
