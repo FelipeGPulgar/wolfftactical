@@ -103,11 +103,24 @@ try {
         // Update password
         $newHash = password_hash($newPass, PASSWORD_DEFAULT);
         $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
-        $result = $stmt->execute([$newHash, $userId]);
+        $stmt->execute([$newHash, $userId]);
+
+        // Send Notification Email
+        $to = $user['email'];
+        $subject = "Cambio de Contraseña - Wolff Tactical";
+        $message = "Hola " . $user['name'] . ",\n\n";
+        $message .= "Tu contraseña ha sido cambiada exitosamente.\n";
+        $message .= "Si no fuiste tú, por favor contacta a soporte inmediatamente.\n\n";
+        $message .= "Saludos,\nEquipo Wolff Tactical";
         
-        if (!$result) {
-             throw new Exception("Error al actualizar la base de datos");
-        }
+        $headers = "From: mail@wolfftactical.cl\r\n";
+        $headers .= "Reply-To: mail@wolfftactical.cl\r\n";
+        $headers .= "X-Mailer: PHP/" . phpversion();
+
+        @mail($to, $subject, $message, $headers);
+
+        // Destroy session immediately to force logout everywhere (on this server)
+        session_destroy();
 
         echo json_encode(['success' => true, 'message' => 'Contraseña cambiada exitosamente. Por favor inicia sesión con tu nueva clave.']);
     }
