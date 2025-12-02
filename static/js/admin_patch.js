@@ -341,25 +341,29 @@
     // 5. ORCHESTRATION (Observer)
     // =========================================
 
+    let mutationTimeout;
     const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.addedNodes && mutation.addedNodes.length > 0) {
-                mutation.addedNodes.forEach((node) => {
-                    fixRawHtml(node);
-                });
-            }
-            if (mutation.type === 'characterData') {
-                fixRawHtml(mutation.target.parentElement);
-            }
-        });
+        if (mutationTimeout) clearTimeout(mutationTimeout);
+        mutationTimeout = setTimeout(() => {
+            mutations.forEach((mutation) => {
+                if (mutation.addedNodes && mutation.addedNodes.length > 0) {
+                    mutation.addedNodes.forEach((node) => {
+                        fixRawHtml(node);
+                    });
+                }
+                if (mutation.type === 'characterData') {
+                    fixRawHtml(mutation.target.parentElement);
+                }
+            });
 
-        // Execute based on route
-        if (window.location.href.includes('/admin')) {
-            applyAdminChanges();
-        }
-        if (window.location.href.includes('/producto/')) {
-            redesignProductPage();
-        }
+            // Execute based on route
+            if (window.location.href.includes('/admin')) {
+                applyAdminChanges();
+            }
+            if (window.location.href.includes('/producto/')) {
+                redesignProductPage();
+            }
+        }, 50); // Small delay to let React finish
     });
 
     observer.observe(document.body, {
